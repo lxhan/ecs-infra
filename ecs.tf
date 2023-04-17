@@ -42,13 +42,13 @@ resource "aws_ecs_service" "main" {
 
   load_balancer {
     target_group_arn = aws_alb_target_group.blue.id
-    container_name   = "api-server"
+    container_name   = var.container_name
     container_port   = var.app_port
   }
 
   load_balancer {
     target_group_arn = aws_alb_target_group.green.id
-    container_name   = "api-server"
+    container_name   = var.container_name
     container_port   = var.app_port
   }
 

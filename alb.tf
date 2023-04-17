@@ -12,13 +12,9 @@ resource "aws_alb_target_group" "blue" {
   target_type = "ip"
 
   health_check {
-    healthy_threshold   = "3"
-    interval            = "30"
-    protocol            = "HTTP"
-    matcher             = "200"
-    timeout             = "3"
-    path                = var.health_check_path
-    unhealthy_threshold = "2"
+    protocol = "HTTP"
+    matcher  = var.health_check_matcher
+    path     = var.health_check_path
   }
 }
 
@@ -30,13 +26,9 @@ resource "aws_alb_target_group" "green" {
   target_type = "ip"
 
   health_check {
-    healthy_threshold   = "3"
-    interval            = "30"
-    protocol            = "HTTP"
-    matcher             = "200"
-    timeout             = "3"
-    path                = var.health_check_path
-    unhealthy_threshold = "2"
+    protocol = "HTTP"
+    matcher  = var.health_check_matcher
+    path     = var.health_check_path
   }
 }
 
@@ -53,14 +45,14 @@ resource "aws_alb_listener" "app_listener" {
 
 resource "aws_alb_listener" "https_redirect" {
   load_balancer_arn = aws_alb.main.arn
-  port              = "80"
+  port              = 80
   protocol          = "HTTP"
 
   default_action {
     type = "redirect"
 
     redirect {
-      port        = "443"
+      port        = 443
       protocol    = "HTTPS"
       status_code = "HTTP_301"
     }
