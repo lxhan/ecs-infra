@@ -52,5 +52,4 @@ resource "aws_cloudwatch_log_group" "api_server_log_group" {
 resource "aws_cloudwatch_log_stream" "api_server_log_stream" {
   name           = "api-server-log-stream"
   log_group_name = aws_cloudwatch_log_group.api_server_log_group.name
-  tags           = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} CW Logs" })
 }

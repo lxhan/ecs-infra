@@ -8,6 +8,41 @@ resource "aws_codepipeline" "main" {
   }
 
   stage {
+    name = "Source"
+
+    action {
+      name             = "Artifact"
+      category         = "Source"
+      owner            = "AWS"
+      provider         = "S3"
+      version          = "1"
+      run_order        = "1"
+      output_artifacts = ["SourceArtifact"]
+
+      configuration = {
+        S3Bucket             = aws_s3_bucket.codepipeline.bucket
+        S3ObjectKey          = "artifact.zip"
+        PollForSourceChanges = true
+      }
+    }
+
+    action {
+      name             = "DockerImage"
+      category         = "Source"
+      owner            = "AWS"
+      provider         = "ECR"
+      version          = "1"
+      run_order        = "1"
+      output_artifacts = ["ECRImage"]
+
+      configuration = {
+        ImageTag       = "dev"
+        RepositoryName = "api-server"
+      }
+    }
+  }
+
+  stage {
     name = "Approval"
 
     action {
@@ -27,41 +62,6 @@ resource "aws_codepipeline" "main" {
   }
 
   stage {
-    name = "Source"
-
-    action {
-      name             = "Source"
-      category         = "Source"
-      owner            = "AWS"
-      provider         = "S3"
-      version          = "1"
-      run_order        = "1"
-      output_artifacts = ["SourceArtifact"]
-
-      configuration = {
-        S3Bucket             = "codepipeline"
-        S3ObjectKey          = "artifact.zip"
-        PollForSourceChanges = true
-      }
-    }
-
-    action {
-      name             = "Source"
-      category         = "Source"
-      owner            = "AWS"
-      provider         = "ECR"
-      version          = "1"
-      run_order        = "1"
-      output_artifacts = ["ECRImage"]
-
-      configuration = {
-        ImageTag       = "dev"
-        RepositoryName = "api-server"
-      }
-    }
-  }
-
-  stage {
     name = "Deploy"
 
     action {
@@ -74,15 +74,19 @@ resource "aws_codepipeline" "main" {
       run_order       = "2"
 
       configuration = {
-        ApplicationName                = "api-server-deploy"
-        ImageArtifactName              = "ECRImage"
+        ApplicationName                = aws_codedeploy_app.main.name
+        Image1ArtifactName             = "ECRImage"
         TaskDefinitionTemplateArtifact = "SourceArtifact"
-        ImageContainerName             = "api-server"
+        Image1ContainerName            = "api-server"
         AppSpecTemplateArtifact        = "SourceArtifact"
-        DeploymentGroupName            = "api-server-dg"
+        DeploymentGroupName            = aws_codedeploy_deployment_group.api_server_dg.deployment_group_name
       }
     }
   }
+
+  depends_on = [
+    aws_s3_bucket.codepipeline
+  ]
 
   tags = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} CodePipeline" })
 }

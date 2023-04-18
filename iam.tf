@@ -48,7 +48,6 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_attach" {
   role       = aws_iam_role.ecs_task_execution_role.name
   policy_arn = aws_iam_policy.ecs_task_execution_policy.arn
   # policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
-  tags = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} IAM Role Policy Attachment" })
 }
 
 /* -------------------------------------------------------------------------- */
@@ -95,13 +94,12 @@ data "aws_iam_policy_document" "codepipeline_policy_data" {
 
 resource "aws_iam_policy" "codepipeline_policy" {
   name   = "codepipeline-policy"
-  policy = data.aws_iam_policy_document.ecs_task_execution_role_data.json
+  policy = data.aws_iam_policy_document.codepipeline_policy_data.json
 }
 
 resource "aws_iam_role_policy_attachment" "codepipeline_role_attach" {
   role       = aws_iam_role.codepipeline_role.name
   policy_arn = aws_iam_policy.codepipeline_policy.arn
-  tags       = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} IAM Role Policy Attachment" })
 }
 
 /* -------------------------------------------------------------------------- */
@@ -121,14 +119,44 @@ data "aws_iam_policy_document" "code_deploy_assume_role_data" {
   }
 }
 
+data "aws_iam_policy_document" "code_deploy_policy_data" {
+  version = "2012-10-17"
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "ecs:DescribeServices",
+      "ecs:CreateTaskSet",
+      "ecs:UpdateServicePrimaryTaskSet",
+      "ecs:DeleteTaskSet",
+      "elasticloadbalancing:DescribeTargetGroups",
+      "elasticloadbalancing:DescribeListeners",
+      "elasticloadbalancing:ModifyListener",
+      "elasticloadbalancing:DescribeRules",
+      "elasticloadbalancing:ModifyRule",
+      "lambda:InvokeFunction",
+      "cloudwatch:DescribeAlarms",
+      "sns:Publish",
+      "s3:GetObject",
+      "s3:GetObjectVersion"
+    ]
+    resources = ["*"]
+  }
+}
+
 resource "aws_iam_role" "code_deploy_role" {
   name               = "code-deploy-role"
   assume_role_policy = data.aws_iam_policy_document.code_deploy_assume_role_data.json
   tags               = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} IAM Role" })
 }
 
-resource "aws_iam_role_policy_attachment" "AWSCodeDeployRole" {
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"
+resource "aws_iam_policy" "code_deploy_policy" {
+  name   = "code_deploy_policy"
+  policy = data.aws_iam_policy_document.code_deploy_policy_data.json
+}
+
+resource "aws_iam_role_policy_attachment" "code_deploy_role_attach" {
   role       = aws_iam_role.code_deploy_role.name
-  tags       = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} IAM Role Policy Attachment" })
+  policy_arn = aws_iam_policy.code_deploy_policy.arn
+  # policy_arn = "arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"
 }
