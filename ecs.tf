@@ -1,5 +1,6 @@
 resource "aws_ecs_cluster" "main" {
   name = "api-server-cluster"
+  tags = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} ECS Cluster" })
 }
 
 data "template_file" "container_definition" {
@@ -21,6 +22,7 @@ resource "aws_ecs_task_definition" "ecs_td" {
   cpu                      = var.task_cpu
   memory                   = var.task_memory
   container_definitions    = data.template_file.container_definition.rendered
+  tags                     = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} ECS Task Definition" })
 }
 
 resource "aws_ecs_service" "main" {
@@ -41,13 +43,13 @@ resource "aws_ecs_service" "main" {
   }
 
   load_balancer {
-    target_group_arn = aws_alb_target_group.blue.id
+    target_group_arn = aws_alb_target_group.blue.arn
     container_name   = var.container_name
     container_port   = var.app_port
   }
 
   load_balancer {
-    target_group_arn = aws_alb_target_group.green.id
+    target_group_arn = aws_alb_target_group.green.arn
     container_name   = var.container_name
     container_port   = var.app_port
   }
@@ -56,4 +58,6 @@ resource "aws_ecs_service" "main" {
     aws_alb_listener.app_listener,
     aws_iam_role_policy_attachment.ecs_task_execution_role_attach
   ]
+
+  tags = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} ECS Service" })
 }

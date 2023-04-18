@@ -1,6 +1,7 @@
 resource "aws_codedeploy_app" "main" {
   compute_platform = "ECS"
   name             = "api-server-deploy"
+  tags             = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} CodeDeploy App" })
 }
 
 resource "aws_codedeploy_deployment_group" "api_server_dg" {
@@ -51,4 +52,6 @@ resource "aws_codedeploy_deployment_group" "api_server_dg" {
       }
     }
   }
+
+  tags = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} CodeDeploy Deployment Group" })
 }

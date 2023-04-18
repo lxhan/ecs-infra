@@ -2,6 +2,7 @@ resource "aws_alb" "main" {
   name            = "api-server-alb"
   subnets         = aws_subnet.public.*.id
   security_groups = [aws_security_group.lb_sg.id]
+  tags            = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} ALB" })
 }
 
 resource "aws_alb_target_group" "blue" {
@@ -16,6 +17,8 @@ resource "aws_alb_target_group" "blue" {
     matcher  = var.health_check_matcher
     path     = var.health_check_path
   }
+
+  tags = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} TG" })
 }
 
 resource "aws_alb_target_group" "green" {
@@ -30,6 +33,8 @@ resource "aws_alb_target_group" "green" {
     matcher  = var.health_check_matcher
     path     = var.health_check_path
   }
+
+  tags = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} TG" })
 }
 
 resource "aws_alb_listener" "app_listener" {
@@ -41,6 +46,8 @@ resource "aws_alb_listener" "app_listener" {
     target_group_arn = aws_alb_target_group.blue.id
     type             = "forward"
   }
+
+  tags = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} ALB Listener" })
 }
 
 resource "aws_alb_listener" "https_redirect" {
@@ -57,4 +64,6 @@ resource "aws_alb_listener" "https_redirect" {
       status_code = "HTTP_301"
     }
   }
+
+  tags = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} ALB Listener" })
 }

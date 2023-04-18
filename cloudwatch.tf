@@ -17,6 +17,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_high" {
   }
 
   alarm_actions = [aws_appautoscaling_policy.up.arn]
+  tags          = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} CW Metric Alarm" })
 }
 
 resource "aws_cloudwatch_metric_alarm" "cpu_low" {
@@ -35,6 +36,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_low" {
   }
 
   alarm_actions = [aws_appautoscaling_policy.down.arn]
+  tags          = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} CW Metric Alarm" })
 }
 
 
@@ -44,9 +46,11 @@ resource "aws_cloudwatch_metric_alarm" "cpu_low" {
 resource "aws_cloudwatch_log_group" "api_server_log_group" {
   name              = "/ecs/api-server"
   retention_in_days = 30
+  tags              = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} CW Logs" })
 }
 
 resource "aws_cloudwatch_log_stream" "api_server_log_stream" {
   name           = "api-server-log-stream"
   log_group_name = aws_cloudwatch_log_group.api_server_log_group.name
+  tags           = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} CW Logs" })
 }

@@ -31,4 +31,5 @@ resource "aws_route" "route" {
   route_table_id         = aws_vpc.main.main_route_table_id
   destination_cidr_block = var.allow_all_cidr
   gateway_id             = aws_internet_gateway.ig.id
+  tags                   = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} AWS Route" })
 }

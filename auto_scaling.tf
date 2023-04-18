@@ -4,6 +4,7 @@ resource "aws_appautoscaling_target" "as_target" {
   scalable_dimension = "ecs:service:DesiredCount"
   min_capacity       = 1
   max_capacity       = 3
+  tags               = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} Auto Scaling Target" })
 }
 
 resource "aws_appautoscaling_policy" "up" {
@@ -26,6 +27,8 @@ resource "aws_appautoscaling_policy" "up" {
   depends_on = [
     aws_appautoscaling_target.as_target
   ]
+
+  tags = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} Auto Scaling Policy" })
 }
 
 resource "aws_appautoscaling_policy" "down" {
@@ -48,4 +51,6 @@ resource "aws_appautoscaling_policy" "down" {
   depends_on = [
     aws_appautoscaling_target.as_target
   ]
+
+  tags = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} Auto Scaling Policy" })
 }

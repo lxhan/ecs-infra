@@ -18,6 +18,7 @@ data "aws_iam_policy_document" "ecs_task_assume_role_data" {
 resource "aws_iam_role" "ecs_task_execution_role" {
   name               = var.ecs_auto_scale_role_name
   assume_role_policy = data.aws_iam_policy_document.ecs_task_assume_role_data.json
+  tags               = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} IAM Role" })
 }
 
 data "aws_iam_policy_document" "ecs_task_execution_role_data" {
@@ -40,12 +41,14 @@ data "aws_iam_policy_document" "ecs_task_execution_role_data" {
 resource "aws_iam_policy" "ecs_task_execution_policy" {
   name   = "ecs-task-exec-policy"
   policy = data.aws_iam_policy_document.ecs_task_execution_role_data.json
+  tags   = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} IAM Policy" })
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_attach" {
   role       = aws_iam_role.ecs_task_execution_role.name
   policy_arn = aws_iam_policy.ecs_task_execution_policy.arn
   # policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+  tags = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} IAM Role Policy Attachment" })
 }
 
 /* -------------------------------------------------------------------------- */
@@ -68,6 +71,7 @@ data "aws_iam_policy_document" "codepipeline_assume_role" {
 resource "aws_iam_role" "codepipeline_role" {
   name               = "codepipeline-role"
   assume_role_policy = data.aws_iam_policy_document.codepipeline_assume_role.json
+  tags               = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} IAM Role" })
 }
 
 data "aws_iam_policy_document" "codepipeline_policy_data" {
@@ -97,6 +101,7 @@ resource "aws_iam_policy" "codepipeline_policy" {
 resource "aws_iam_role_policy_attachment" "codepipeline_role_attach" {
   role       = aws_iam_role.codepipeline_role.name
   policy_arn = aws_iam_policy.codepipeline_policy.arn
+  tags       = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} IAM Role Policy Attachment" })
 }
 
 /* -------------------------------------------------------------------------- */
@@ -119,9 +124,11 @@ data "aws_iam_policy_document" "code_deploy_assume_role_data" {
 resource "aws_iam_role" "code_deploy_role" {
   name               = "code-deploy-role"
   assume_role_policy = data.aws_iam_policy_document.code_deploy_assume_role_data.json
+  tags               = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} IAM Role" })
 }
 
 resource "aws_iam_role_policy_attachment" "AWSCodeDeployRole" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"
   role       = aws_iam_role.code_deploy_role.name
+  tags       = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} IAM Role Policy Attachment" })
 }

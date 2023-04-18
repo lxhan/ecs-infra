@@ -10,12 +10,20 @@ resource "aws_security_group" "lb_sg" {
     cidr_blocks = [var.allow_all_cidr]
   }
 
+  ingress {
+    protocol    = "tcp"
+    from_port   = 80
+    to_port     = 80
+    cidr_blocks = [var.allow_all_cidr]
+  }
+
   egress {
     protocol    = "-1"
     from_port   = 0
     to_port     = 0
     cidr_blocks = [var.allow_all_cidr]
   }
+  tags = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} Security Group" })
 }
 
 resource "aws_security_group" "ecs_sg" {
@@ -36,4 +44,5 @@ resource "aws_security_group" "ecs_sg" {
     to_port     = 0
     cidr_blocks = [var.allow_all_cidr]
   }
+  tags = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} Security Group" })
 }
