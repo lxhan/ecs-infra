@@ -1,12 +1,12 @@
 resource "aws_alb" "main" {
-  name            = "api-server-alb"
+  name            = "${var.app_name}-alb"
   subnets         = aws_subnet.public.*.id
   security_groups = [aws_security_group.lb_sg.id]
   tags            = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} ALB" })
 }
 
 resource "aws_alb_target_group" "blue" {
-  name        = "api-server-tg-1"
+  name        = "${var.app_name}-tg-1"
   port        = 80
   protocol    = "HTTP"
   vpc_id      = aws_vpc.main.id
@@ -22,7 +22,7 @@ resource "aws_alb_target_group" "blue" {
 }
 
 resource "aws_alb_target_group" "green" {
-  name        = "api-server-tg-2"
+  name        = "${var.app_name}-tg-2"
   port        = 80
   protocol    = "HTTP"
   vpc_id      = aws_vpc.main.id
@@ -57,20 +57,20 @@ resource "aws_alb_listener" "app_listener" {
   tags = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} ALB Listener" })
 }
 
-# resource "aws_alb_listener" "https_redirect" {
-#   load_balancer_arn = aws_alb.main.arn
-#   port              = 80
-#   protocol          = "HTTP"
+resource "aws_alb_listener" "https_redirect" {
+  load_balancer_arn = aws_alb.main.arn
+  port              = 80
+  protocol          = "HTTP"
 
-#   default_action {
-#     type = "redirect"
+  default_action {
+    type = "redirect"
 
-#     redirect {
-#       port        = 443
-#       protocol    = "HTTPS"
-#       status_code = "HTTP_301"
-#     }
-#   }
+    redirect {
+      port        = 443
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
 
-#   tags = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} ALB Listener" })
-# }
+  tags = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} ALB Listener" })
+}

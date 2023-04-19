@@ -1,5 +1,5 @@
 resource "aws_security_group" "lb_sg" {
-  name        = "api-server-sg"
+  name        = "${var.app_name}-sg"
   description = "Security group for ALB"
   vpc_id      = aws_vpc.main.id
 

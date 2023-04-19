@@ -1,13 +1,13 @@
 resource "aws_codedeploy_app" "main" {
   compute_platform = "ECS"
-  name             = "api-server-deploy"
+  name             = "${var.app_name}-deploy"
   tags             = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} CodeDeploy App" })
 }
 
 resource "aws_codedeploy_deployment_group" "api_server_dg" {
   app_name               = aws_codedeploy_app.main.name
   deployment_config_name = "CodeDeployDefault.ECSAllAtOnce"
-  deployment_group_name  = "api-server-dg"
+  deployment_group_name  = "${var.app_name}-dg"
   service_role_arn       = aws_iam_role.code_deploy_role.arn
 
   auto_rollback_configuration {

@@ -1,5 +1,5 @@
 resource "aws_ecs_cluster" "main" {
-  name = "api-server-cluster"
+  name = "${var.app_name}-cluster"
   tags = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} ECS Cluster" })
 }
 
@@ -15,7 +15,7 @@ data "template_file" "container_definition" {
 }
 
 resource "aws_ecs_task_definition" "ecs_td" {
-  family                   = "api-server-task"
+  family                   = "${var.app_name}-task"
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
@@ -26,7 +26,7 @@ resource "aws_ecs_task_definition" "ecs_td" {
 }
 
 resource "aws_ecs_service" "main" {
-  name            = "api-server-service"
+  name            = "${var.app_name}-service"
   cluster         = aws_ecs_cluster.main.id
   task_definition = aws_ecs_task_definition.ecs_td.arn
   desired_count   = var.app_count

@@ -1,6 +1,10 @@
 /* -------------------------------------------------------------------------- */
 /*                                   Common                                   */
 /* -------------------------------------------------------------------------- */
+variable "app_name" {
+  type    = string
+  default = "api-server"
+}
 variable "aws_region" {
   type    = string
   default = "ap-northeast-1"

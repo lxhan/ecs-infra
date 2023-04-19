@@ -32,12 +32,12 @@ resource "aws_codepipeline" "main" {
       owner            = "AWS"
       provider         = "ECR"
       version          = "1"
-      run_order        = "1"
+      run_order        = "2"
       output_artifacts = ["ECRImage"]
 
       configuration = {
-        ImageTag       = "dev"
-        RepositoryName = "api-server"
+        ImageTag       = "latest"
+        RepositoryName = aws_ecr_repository.main.name
       }
     }
   }
@@ -46,7 +46,7 @@ resource "aws_codepipeline" "main" {
     name = "Approval"
 
     action {
-      run_order        = 1
+      run_order        = "1"
       name             = "AWS-Admin-Approval"
       category         = "Approval"
       owner            = "AWS"
@@ -67,11 +67,11 @@ resource "aws_codepipeline" "main" {
     action {
       name            = "Deploy"
       category        = "Deploy"
-      input_artifacts = ["SourceArtifact", "ECRImage"]
+      input_artifacts = ["ECRImage"]
       owner           = "AWS"
       provider        = "CodeDeployToECS"
       version         = "1"
-      run_order       = "2"
+      run_order       = "3"
 
       configuration = {
         ApplicationName                = aws_codedeploy_app.main.name
