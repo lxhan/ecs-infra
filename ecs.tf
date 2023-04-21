@@ -6,11 +6,12 @@ resource "aws_ecs_cluster" "main" {
 data "template_file" "container_definition" {
   template = file("./templates/container_def.json.tpl")
   vars = {
-    docker_image = aws_ecr_repository.main.repository_url
-    app_port     = var.app_port
-    task_cpu     = var.task_cpu
-    task_memory  = var.task_memory
-    aws_region   = var.aws_region
+    docker_image   = aws_ecr_repository.main.repository_url
+    container_name = var.container_name
+    app_port       = var.app_port
+    task_cpu       = var.task_cpu
+    task_memory    = var.task_memory
+    aws_region     = var.aws_region
   }
 }
 
@@ -42,21 +43,20 @@ resource "aws_ecs_service" "main" {
     assign_public_ip = true
   }
 
-  load_balancer {
-    target_group_arn = aws_alb_target_group.blue.arn
-    container_name   = var.container_name
-    container_port   = var.app_port
-  }
+  # load_balancer {
+  #   target_group_arn = aws_alb_target_group.blue.arn
+  #   container_name   = var.container_name
+  #   container_port   = var.app_port
+  # }
 
   load_balancer {
-    target_group_arn = aws_alb_target_group.green.arn
+    target_group_arn = aws_alb_target_group.main.1.arn
     container_name   = var.container_name
     container_port   = var.app_port
   }
 
   depends_on = [
-    aws_alb_listener.app_listener,
-    aws_iam_role_policy_attachment.ecs_task_execution_role_attach
+    aws_alb_listener.main
   ]
 
   tags = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} ECS Service" })

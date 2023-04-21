@@ -68,13 +68,13 @@ variable "ecs_auto_scale_role_name" {
 }
 
 variable "task_cpu" {
-  type    = string
-  default = "256"
+  type    = number
+  default = 256
 }
 
 variable "task_memory" {
-  type    = string
-  default = "512"
+  type    = number
+  default = 512
 }
 
 variable "app_count" {
@@ -84,5 +84,5 @@ variable "app_count" {
 
 variable "container_name" {
   type    = string
-  default = "api-server"
+  default = "api-server-container"
 }

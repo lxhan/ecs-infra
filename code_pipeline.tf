@@ -15,8 +15,8 @@ resource "aws_codepipeline" "main" {
       category         = "Source"
       owner            = "AWS"
       provider         = "S3"
-      version          = "1"
-      run_order        = "1"
+      version          = 1
+      run_order        = 1
       output_artifacts = ["SourceArtifact"]
 
       configuration = {
@@ -31,35 +31,35 @@ resource "aws_codepipeline" "main" {
       category         = "Source"
       owner            = "AWS"
       provider         = "ECR"
-      version          = "1"
-      run_order        = "2"
+      version          = 1
+      run_order        = 1
       output_artifacts = ["ECRImage"]
 
       configuration = {
-        ImageTag       = "latest"
+        ImageTag       = "dev"
         RepositoryName = aws_ecr_repository.main.name
       }
     }
   }
 
-  stage {
-    name = "Approval"
+  # stage {
+  #   name = "Approval"
 
-    action {
-      run_order        = "1"
-      name             = "AWS-Admin-Approval"
-      category         = "Approval"
-      owner            = "AWS"
-      provider         = "Manual"
-      version          = "1"
-      input_artifacts  = []
-      output_artifacts = []
+  #   action {
+  #     name             = "AWS-Admin-Approval"
+  #     category         = "Approval"
+  #     owner            = "AWS"
+  #     provider         = "Manual"
+  #     version          = 1
+  #     run_order        = 1
+  #     input_artifacts  = []
+  #     output_artifacts = []
 
-      configuration = {
-        CustomData = "Please verify the terraform plan output on the Plan stage and only approve this step if you see expected changes!"
-      }
-    }
-  }
+  #     configuration = {
+  #       CustomData = "Please verify the terraform plan output on the Plan stage and only approve this step if you see expected changes!"
+  #     }
+  #   }
+  # }
 
   stage {
     name = "Deploy"
@@ -67,17 +67,17 @@ resource "aws_codepipeline" "main" {
     action {
       name            = "Deploy"
       category        = "Deploy"
-      input_artifacts = ["ECRImage"]
+      input_artifacts = ["SourceArtifact", "ECRImage"]
       owner           = "AWS"
       provider        = "CodeDeployToECS"
-      version         = "1"
-      run_order       = "3"
+      version         = 1
+      run_order       = 1
 
       configuration = {
         ApplicationName                = aws_codedeploy_app.main.name
         Image1ArtifactName             = "ECRImage"
         TaskDefinitionTemplateArtifact = "SourceArtifact"
-        Image1ContainerName            = "api-server"
+        Image1ContainerName            = "IMAGE1_NAME"
         AppSpecTemplateArtifact        = "SourceArtifact"
         DeploymentGroupName            = aws_codedeploy_deployment_group.api_server_dg.deployment_group_name
       }

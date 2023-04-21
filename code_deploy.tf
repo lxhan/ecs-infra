@@ -22,7 +22,7 @@ resource "aws_codedeploy_deployment_group" "api_server_dg" {
     }
     terminate_blue_instances_on_deployment_success {
       action                           = "TERMINATE"
-      termination_wait_time_in_minutes = 15
+      termination_wait_time_in_minutes = 5
     }
   }
 
@@ -39,17 +39,17 @@ resource "aws_codedeploy_deployment_group" "api_server_dg" {
   load_balancer_info {
     target_group_pair_info {
       target_group {
-        name = aws_alb_target_group.blue.name
+        name = aws_alb_target_group.main.*.name[0]
       }
       target_group {
-        name = aws_alb_target_group.green.name
+        name = aws_alb_target_group.main.*.name[1]
       }
       prod_traffic_route {
-        listener_arns = [aws_alb_listener.https_redirect.arn]
+        listener_arns = [aws_alb_listener.main.arn]
       }
-      test_traffic_route {
-        listener_arns = [aws_alb_listener.app_listener.arn]
-      }
+      # test_traffic_route {
+      #   listener_arns = [aws_alb_listener.app_listener.arn]
+      # }
     }
   }
 

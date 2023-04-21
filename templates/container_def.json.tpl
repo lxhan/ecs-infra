@@ -1,6 +1,6 @@
 [
   {
-    "name": "api-server",
+    "name": "api-server-container",
     "image": "${docker_image}",
     "cpu": ${task_cpu},
     "memory": ${task_memory},
