@@ -5,6 +5,12 @@ variable "app_name" {
   type    = string
   default = "api-server"
 }
+
+variable "env" {
+  type    = string
+  default = "dev"
+}
+
 variable "aws_region" {
   type    = string
   default = "ap-northeast-1"
@@ -15,14 +21,13 @@ variable "aws_profile" {
   default = "naonow"
 }
 
-
 variable "common_tags" {
   type        = map(any)
   description = "Common tags to apply to all resources"
   default = {
     Owner       = "Alex Han"
-    Project     = "API Server"
-    Environment = "PROD"
+    Project     = "api-server"
+    Environment = "dev"
   }
 }
 
@@ -31,7 +36,7 @@ variable "common_tags" {
 /* -------------------------------------------------------------------------- */
 variable "az_count" {
   type    = string
-  default = "2"
+  default = 2
 }
 
 variable "health_check_path" {
@@ -57,16 +62,6 @@ variable "app_port" {
 /* -------------------------------------------------------------------------- */
 /*                                     ECS                                    */
 /* -------------------------------------------------------------------------- */
-variable "ecs_task_execution_role_name" {
-  type    = string
-  default = "ecs-task-exec-role"
-}
-
-variable "ecs_auto_scale_role_name" {
-  type    = string
-  default = "ecs-auto-scale-role"
-}
-
 variable "task_cpu" {
   type    = number
   default = 256
@@ -79,7 +74,7 @@ variable "task_memory" {
 
 variable "app_count" {
   type    = string
-  default = "1"
+  default = 1
 }
 
 variable "container_name" {

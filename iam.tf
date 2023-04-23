@@ -47,7 +47,6 @@ resource "aws_iam_policy" "ecs_task_execution_policy" {
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_attach" {
   role       = aws_iam_role.ecs_task_execution_role.name
   policy_arn = aws_iam_policy.ecs_task_execution_policy.arn
-  # policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
 data "aws_iam_policy_document" "task_role_data" {
@@ -64,6 +63,7 @@ data "aws_iam_policy_document" "task_role_data" {
 resource "aws_iam_role" "task_role" {
   name               = "${var.app_name}-ecs-task-role"
   assume_role_policy = data.aws_iam_policy_document.ecs_task_assume_role_data.json
+  tags               = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} IAM Role" })
 }
 
 resource "aws_iam_policy" "task_role_policy" {
@@ -220,5 +220,4 @@ resource "aws_iam_policy" "code_deploy_policy" {
 resource "aws_iam_role_policy_attachment" "code_deploy_role_attach" {
   role       = aws_iam_role.code_deploy_role.name
   policy_arn = aws_iam_policy.code_deploy_policy.arn
-  # policy_arn = "arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"
 }
