@@ -27,7 +27,7 @@ resource "aws_security_group" "lb_sg" {
 }
 
 resource "aws_security_group" "ecs_sg" {
-  name        = "ecs-task-sg"
+  name        = "${var.app_name}-ecs-task-sg"
   description = "Allows inbound traffic from ALB"
   vpc_id      = aws_vpc.main.id
 

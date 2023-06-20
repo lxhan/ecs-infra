@@ -1,5 +1,5 @@
 resource "aws_codepipeline" "main" {
-  name     = "api-server-codepipeline"
+  name     = "${var.app_name}-codepipelie"
   role_arn = aws_iam_role.codepipeline_role.arn
 
   artifact_store {

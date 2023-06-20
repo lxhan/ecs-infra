@@ -3,12 +3,7 @@
 /* -------------------------------------------------------------------------- */
 variable "app_name" {
   type    = string
-  default = "api-server"
-}
-
-variable "env" {
-  type    = string
-  default = "dev"
+  default = "appname"
 }
 
 variable "aws_region" {
@@ -26,7 +21,7 @@ variable "common_tags" {
   description = "Common tags to apply to all resources"
   default = {
     Owner       = "Alex Han"
-    Project     = "api-server"
+    Project     = "appname"
     Environment = "dev"
   }
 }
@@ -45,8 +40,8 @@ variable "health_check_path" {
 }
 
 variable "health_check_matcher" {
-  type    = string
-  default = "200"
+  type    = number
+  default = 200
 }
 
 variable "allow_all_cidr" {
@@ -73,11 +68,6 @@ variable "task_memory" {
 }
 
 variable "app_count" {
-  type    = string
+  type    = number
   default = 1
-}
-
-variable "container_name" {
-  type    = string
-  default = "api-server-container"
 }
