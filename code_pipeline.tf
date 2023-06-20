@@ -79,7 +79,7 @@ resource "aws_codepipeline" "main" {
         TaskDefinitionTemplateArtifact = "SourceArtifact"
         Image1ContainerName            = "IMAGE1_NAME"
         AppSpecTemplateArtifact        = "SourceArtifact"
-        DeploymentGroupName            = aws_codedeploy_deployment_group.api_server_dg.deployment_group_name
+        DeploymentGroupName            = aws_codedeploy_deployment_group.main.deployment_group_name
       }
     }
   }

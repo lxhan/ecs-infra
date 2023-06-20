@@ -43,7 +43,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_low" {
 /* -------------------------------------------------------------------------- */
 /*                                    Logs                                    */
 /* -------------------------------------------------------------------------- */
-resource "aws_cloudwatch_log_group" "api_server_log_group" {
+resource "aws_cloudwatch_log_group" "main" {
   name              = "/ecs/${var.app_name}"
   retention_in_days = 30
   tags              = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} CW Logs" })
@@ -51,5 +51,5 @@ resource "aws_cloudwatch_log_group" "api_server_log_group" {
 
 resource "aws_cloudwatch_log_stream" "api_server_log_stream" {
   name           = "${var.app_name}-log-stream"
-  log_group_name = aws_cloudwatch_log_group.api_server_log_group.name
+  log_group_name = aws_cloudwatch_log_group.main.name
 }

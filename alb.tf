@@ -1,6 +1,6 @@
 locals {
   target_groups = ["blue", "green"]
-  host_name     = "*.ap-northeast-1.elb.amazonaws.com"
+  host_name     = "*.${var.aws_region}.elb.amazonaws.com"
 }
 
 resource "aws_alb" "main" {

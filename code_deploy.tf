@@ -4,7 +4,7 @@ resource "aws_codedeploy_app" "main" {
   tags             = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} CodeDeploy App" })
 }
 
-resource "aws_codedeploy_deployment_group" "api_server_dg" {
+resource "aws_codedeploy_deployment_group" "main" {
   app_name               = aws_codedeploy_app.main.name
   deployment_config_name = "CodeDeployDefault.ECSAllAtOnce"
   deployment_group_name  = "${var.app_name}-dg"

@@ -22,7 +22,7 @@ resource "aws_subnet" "private" {
   tags              = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} Private Subnet" })
 }
 
-resource "aws_internet_gateway" "ig" {
+resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
   tags   = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} IG" })
 }
@@ -30,5 +30,5 @@ resource "aws_internet_gateway" "ig" {
 resource "aws_route" "route" {
   route_table_id         = aws_vpc.main.main_route_table_id
   destination_cidr_block = var.allow_all_cidr
-  gateway_id             = aws_internet_gateway.ig.id
+  gateway_id             = aws_internet_gateway.main.id
 }

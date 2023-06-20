@@ -1,4 +1,4 @@
-resource "aws_appautoscaling_target" "as_target" {
+resource "aws_appautoscaling_target" "main" {
   service_namespace  = "ecs"
   resource_id        = "service/${aws_ecs_cluster.main.name}/${aws_ecs_service.main.name}"
   scalable_dimension = "ecs:service:DesiredCount"
@@ -24,7 +24,7 @@ resource "aws_appautoscaling_policy" "up" {
   }
 
   depends_on = [
-    aws_appautoscaling_target.as_target
+    aws_appautoscaling_target.main
   ]
 }
 
@@ -46,6 +46,6 @@ resource "aws_appautoscaling_policy" "down" {
   }
 
   depends_on = [
-    aws_appautoscaling_target.as_target
+    aws_appautoscaling_target.main
   ]
 }
