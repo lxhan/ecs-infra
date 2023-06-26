@@ -1,5 +1,5 @@
 resource "aws_codepipeline" "main" {
-  name     = "${var.app_name}-codepipelie"
+  name     = "${var.project_name}-codepipeline"
   role_arn = aws_iam_role.codepipeline_role.arn
 
   artifact_store {
@@ -36,7 +36,7 @@ resource "aws_codepipeline" "main" {
       output_artifacts = ["ECRImage"]
 
       configuration = {
-        ImageTag       = "dev"
+        ImageTag       = "latest"
         RepositoryName = aws_ecr_repository.main.name
       }
     }

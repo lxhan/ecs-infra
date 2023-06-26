@@ -4,7 +4,7 @@ locals {
 }
 
 resource "aws_alb" "main" {
-  name            = "${var.app_name}-alb"
+  name            = "${var.project_name}-alb"
   subnets         = aws_subnet.public.*.id
   security_groups = [aws_security_group.lb_sg.id]
   tags            = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} ALB" })
@@ -12,7 +12,7 @@ resource "aws_alb" "main" {
 
 resource "aws_alb_target_group" "main" {
   count = length(local.target_groups)
-  name  = "${var.app_name}-tg-${element(local.target_groups, count.index)}"
+  name  = "${var.project_name}-tg-${element(local.target_groups, count.index)}"
 
   port        = 80
   protocol    = "HTTP"

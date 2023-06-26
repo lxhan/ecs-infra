@@ -1,9 +1,9 @@
 /* -------------------------------------------------------------------------- */
 /*                                   Common                                   */
 /* -------------------------------------------------------------------------- */
-variable "app_name" {
+variable "project_name" {
   type    = string
-  default = "appname"
+  default = ""
 }
 
 variable "aws_region" {
@@ -11,17 +11,12 @@ variable "aws_region" {
   default = "ap-northeast-2"
 }
 
-variable "aws_profile" {
-  type    = string
-  default = ""
-}
-
 variable "common_tags" {
   type        = map(any)
   description = "Common tags to apply to all resources"
   default = {
     Owner       = "Alex Han"
-    Project     = "appname"
+    Project     = ""
     Environment = "dev"
   }
 }
@@ -36,7 +31,7 @@ variable "az_count" {
 
 variable "health_check_path" {
   type    = string
-  default = "/health"
+  default = "/"
 }
 
 variable "health_check_matcher" {
@@ -51,7 +46,7 @@ variable "allow_all_cidr" {
 
 variable "app_port" {
   type    = number
-  default = 4000
+  default = 3000
 }
 
 /* -------------------------------------------------------------------------- */

@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "codepipeline" {
-  bucket = "${var.app_name}-codepipeline-${lower(var.common_tags["Environment"])}"
+  bucket = "${var.project_name}-codepipeline"
   tags   = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} S3 Bucket" })
 }
 

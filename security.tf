@@ -1,5 +1,5 @@
 resource "aws_security_group" "lb_sg" {
-  name        = "${var.app_name}-sg"
+  name        = "${var.project_name}-sg"
   description = "Security group for ALB"
   vpc_id      = aws_vpc.main.id
 
@@ -27,7 +27,7 @@ resource "aws_security_group" "lb_sg" {
 }
 
 resource "aws_security_group" "ecs_sg" {
-  name        = "${var.app_name}-ecs-task-sg"
+  name        = "${var.project_name}-ecs-task-sg"
   description = "Allows inbound traffic from ALB"
   vpc_id      = aws_vpc.main.id
 
