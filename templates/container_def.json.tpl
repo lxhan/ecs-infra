@@ -1,6 +1,6 @@
 [
   {
-    "name": "${app_name}-container",
+    "name": "${app_name}",
     "image": "${docker_image}",
     "cpu": ${task_cpu},
     "memory": ${task_memory},

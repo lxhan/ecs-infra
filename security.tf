@@ -23,7 +23,7 @@ resource "aws_security_group" "lb_sg" {
     to_port     = 0
     cidr_blocks = [var.allow_all_cidr]
   }
-  tags = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} Security Group" })
+  tags = merge(var.common_tags, { Name = "${var.common_tags["Project"]} Security Group" })
 }
 
 resource "aws_security_group" "ecs_sg" {
@@ -44,5 +44,5 @@ resource "aws_security_group" "ecs_sg" {
     to_port     = 0
     cidr_blocks = [var.allow_all_cidr]
   }
-  tags = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} Security Group" })
+  tags = merge(var.common_tags, { Name = "${var.common_tags["Project"]} Security Group" })
 }

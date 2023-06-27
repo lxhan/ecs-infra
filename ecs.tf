@@ -1,18 +1,17 @@
 resource "aws_ecs_cluster" "main" {
   name = "${var.project_name}-cluster"
-  tags = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} ECS Cluster" })
+  tags = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ECS Cluster" })
 }
 
 data "template_file" "container_definition" {
   template = file("./templates/container_def.json.tpl")
   vars = {
-    docker_image   = aws_ecr_repository.main.repository_url
-    container_name = "${var.project_name}-container"
-    app_name       = var.project_name
-    app_port       = var.app_port
-    task_cpu       = var.task_cpu
-    task_memory    = var.task_memory
-    aws_region     = var.aws_region
+    docker_image = aws_ecr_repository.main.repository_url
+    app_name     = var.project_name
+    app_port     = var.app_port
+    task_cpu     = var.task_cpu
+    task_memory  = var.task_memory
+    aws_region   = var.aws_region
   }
 }
 
@@ -24,7 +23,7 @@ resource "aws_ecs_task_definition" "main" {
   cpu                      = var.task_cpu
   memory                   = var.task_memory
   container_definitions    = data.template_file.container_definition.rendered
-  tags                     = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} ECS Task Definition" })
+  tags                     = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ECS Task Definition" })
 }
 
 resource "aws_ecs_service" "main" {
@@ -54,5 +53,5 @@ resource "aws_ecs_service" "main" {
     aws_alb_listener.main
   ]
 
-  tags = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} ECS Service" })
+  tags = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ECS Service" })
 }

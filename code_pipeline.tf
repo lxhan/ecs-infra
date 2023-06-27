@@ -42,25 +42,6 @@ resource "aws_codepipeline" "main" {
     }
   }
 
-  # stage {
-  #   name = "Approval"
-
-  #   action {
-  #     name             = "AWS-Admin-Approval"
-  #     category         = "Approval"
-  #     owner            = "AWS"
-  #     provider         = "Manual"
-  #     version          = 1
-  #     run_order        = 1
-  #     input_artifacts  = []
-  #     output_artifacts = []
-
-  #     configuration = {
-  #       CustomData = "Please verify the terraform plan output on the Plan stage and only approve this step if you see expected changes!"
-  #     }
-  #   }
-  # }
-
   stage {
     name = "Deploy"
 
@@ -88,5 +69,5 @@ resource "aws_codepipeline" "main" {
     aws_s3_bucket.codepipeline
   ]
 
-  tags = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} CodePipeline" })
+  tags = merge(var.common_tags, { Name = "${var.common_tags["Project"]} CodePipeline" })
 }

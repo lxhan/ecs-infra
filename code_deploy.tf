@@ -1,7 +1,7 @@
 resource "aws_codedeploy_app" "main" {
   compute_platform = "ECS"
   name             = "${var.project_name}-deploy"
-  tags             = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} CodeDeploy App" })
+  tags             = merge(var.common_tags, { Name = "${var.common_tags["Project"]} CodeDeploy App" })
 }
 
 resource "aws_codedeploy_deployment_group" "main" {
@@ -53,5 +53,5 @@ resource "aws_codedeploy_deployment_group" "main" {
     }
   }
 
-  tags = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} CodeDeploy Deployment Group" })
+  tags = merge(var.common_tags, { Name = "${var.common_tags["Project"]} CodeDeploy Deployment Group" })
 }

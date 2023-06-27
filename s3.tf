@@ -1,6 +1,6 @@
 resource "aws_s3_bucket" "codepipeline" {
   bucket = "${var.project_name}-codepipeline"
-  tags   = merge(var.common_tags, { Name = "${var.common_tags["Project"]} ${var.common_tags["Environment"]} S3 Bucket" })
+  tags   = merge(var.common_tags, { Name = "${var.common_tags["Project"]} S3 Bucket" })
 }
 
 resource "aws_s3_bucket_ownership_controls" "codepipeline" {

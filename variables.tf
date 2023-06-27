@@ -15,9 +15,8 @@ variable "common_tags" {
   type        = map(any)
   description = "Common tags to apply to all resources"
   default = {
-    Owner       = "Alex Han"
-    Project     = ""
-    Environment = "dev"
+    Owner   = "Alex Han"
+    Project = ""
   }
 }
 
@@ -31,7 +30,7 @@ variable "az_count" {
 
 variable "health_check_path" {
   type    = string
-  default = "/"
+  default = "/api/health"
 }
 
 variable "health_check_matcher" {
@@ -46,7 +45,7 @@ variable "allow_all_cidr" {
 
 variable "app_port" {
   type    = number
-  default = 3000
+  default = 5000
 }
 
 /* -------------------------------------------------------------------------- */
